@@ -19,7 +19,7 @@ enum Slope {
 
 struct ChainSetting {
     float peakFreq{ 0 }, peakGainInDecibels{ 0 }, peakQ{ 1.0f };
-    float lowCutFreq{ 0 }, highCutFreq;
+    float lowCutFreq{ 0 }, highCutFreq{0};
     Slope lowCutSlope{ Slope::Slope_12 }, highCutSlope{ Slope::Slope_12 };
 };
 
@@ -88,6 +88,36 @@ private:
 
     void updatePeakFilter(const ChainSetting& settings);
     void updateLowCutFilter(const ChainSetting& settings);
+    using Coefficients = Filter::CoefficientsPtr;
+    static void updateCoefficients(Coefficients& old, const Coefficients& replacement);
+
+    template<typename ChainType, typename CoefficientType>
+
+    void updateCutFilter(ChainType& leftLowCut,
+        const CoefficientType& cutCoefficients,
+        const ChainSetting& settings) {
+        // bypass links in the chain
+        leftLowCut.setBypassed<0>(true);
+        leftLowCut.setBypassed<1>(true);
+        leftLowCut.setBypassed<2>(true);
+        leftLowCut.setBypassed<3>(true);
+
+        switch (settings.lowCutSlope) {
+        case Slope_48:
+            *leftLowCut.get<3>().coefficients = *cutCoefficients[3];
+            leftLowCut.setBypassed<3>(false);
+        case Slope_36:
+            *leftLowCut.get<2>().coefficients = *cutCoefficients[2];
+            leftLowCut.setBypassed<2>(false);
+        case Slope_24:
+            *leftLowCut.get<1>().coefficients = *cutCoefficients[1];
+            leftLowCut.setBypassed<1>(false);
+        case Slope_12:
+            *leftLowCut.get<0>().coefficients = *cutCoefficients[0];
+            leftLowCut.setBypassed<0>(false);
+        }
+    }
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleEQAudioProcessor)
 };

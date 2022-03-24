@@ -115,50 +115,10 @@ void SimpleEQAudioProcessor::updateLowCutFilter(const ChainSetting& settings)
         2 * (settings.lowCutSlope + 1));
 
     auto& leftLowCut = leftChannel.get<ChainPositions::LowCut>();
-
-    // bypass links in the chain
-    leftLowCut.setBypassed<0>(true);
-    leftLowCut.setBypassed<1>(true);
-    leftLowCut.setBypassed<2>(true);
-    leftLowCut.setBypassed<3>(true);
-
-    switch (settings.lowCutSlope) {
-    case Slope_48:
-        *leftLowCut.get<3>().coefficients = *cutCoefficients[3];
-        leftLowCut.setBypassed<3>(false);
-    case Slope_36:
-        *leftLowCut.get<2>().coefficients = *cutCoefficients[2];
-        leftLowCut.setBypassed<2>(false);
-    case Slope_24:
-        *leftLowCut.get<1>().coefficients = *cutCoefficients[1];
-        leftLowCut.setBypassed<1>(false);
-    case Slope_12:
-        *leftLowCut.get<0>().coefficients = *cutCoefficients[0];
-        leftLowCut.setBypassed<0>(false);
-    }
-
+    updateCutFilter(leftLowCut, cutCoefficients, settings);
+    
     auto& rightLowCut = rightChannel.get<ChainPositions::LowCut>();
-
-    // bypass links in the chain
-    rightLowCut.setBypassed<0>(true);
-    rightLowCut.setBypassed<1>(true);
-    rightLowCut.setBypassed<2>(true);
-    rightLowCut.setBypassed<3>(true);
-
-    switch (settings.lowCutSlope) {
-    case Slope_48:
-        *rightLowCut.get<3>().coefficients = *cutCoefficients[3];
-        rightLowCut.setBypassed<3>(false);
-    case Slope_36:
-        *rightLowCut.get<2>().coefficients = *cutCoefficients[2];
-        rightLowCut.setBypassed<2>(false);
-    case Slope_24:
-        *rightLowCut.get<1>().coefficients = *cutCoefficients[1];
-        rightLowCut.setBypassed<1>(false);
-    case Slope_12:
-        *rightLowCut.get<0>().coefficients = *cutCoefficients[0];
-        rightLowCut.setBypassed<0>(false);
-    }
+    updateCutFilter(rightLowCut, cutCoefficients, settings);
 }
 
 
