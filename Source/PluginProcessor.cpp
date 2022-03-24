@@ -115,10 +115,15 @@ void SimpleEQAudioProcessor::updateLowCutFilter(const ChainSetting& settings)
         2 * (settings.lowCutSlope + 1));
 
     auto& leftLowCut = leftChannel.get<ChainPositions::LowCut>();
-    updateCutFilter(leftLowCut, cutCoefficients, settings);
+    updateCutFilter(leftLowCut, cutCoefficients, settings.lowCutSlope);
     
     auto& rightLowCut = rightChannel.get<ChainPositions::LowCut>();
-    updateCutFilter(rightLowCut, cutCoefficients, settings);
+    updateCutFilter(rightLowCut, cutCoefficients, settings.lowCutSlope);
+}
+
+void SimpleEQAudioProcessor::updateCoefficients(Coefficients& old, const Coefficients& replacement)
+{
+    *old = *replacement;
 }
 
 
