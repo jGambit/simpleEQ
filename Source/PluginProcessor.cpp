@@ -166,7 +166,8 @@ bool SimpleEQAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* SimpleEQAudioProcessor::createEditor()
 {
-    return new SimpleEQAudioProcessorEditor (*this);
+    // return new SimpleEQAudioProcessorEditor (*this);
+    return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
@@ -199,6 +200,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SimpleEQAudioProcessor::crea
     slopes.add("48");
 
     result.add(std::make_unique<juce::AudioParameterChoice>("Low Cut Slope", "Low Cut Slope", slopes, 0));
+    result.add(std::make_unique<juce::AudioParameterChoice>("High Cut Slope", "High Cut Slope", slopes, 0));
 
     return result;
 }

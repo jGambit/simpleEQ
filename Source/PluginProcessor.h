@@ -57,7 +57,7 @@ public:
 
     juce::AudioProcessorValueTreeState audioState{
         *this, nullptr, "Parameters", createParameterLayout()
-    }
+    };
 
 private:
     //==============================================================================
