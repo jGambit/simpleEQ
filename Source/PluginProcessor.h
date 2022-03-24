@@ -88,6 +88,7 @@ private:
 
     void updatePeakFilter(const ChainSetting& settings);
     void updateLowCutFilter(const ChainSetting& settings);
+    void updateHighCutFilter(const ChainSetting& settings);
     using Coefficients = Filter::CoefficientsPtr;
     static void updateCoefficients(Coefficients& old, const Coefficients& replacement);
 
