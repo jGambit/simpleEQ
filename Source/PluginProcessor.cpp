@@ -103,10 +103,7 @@ void SimpleEQAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     leftChannel.prepare(spec);
     rightChannel.prepare(spec);
 
-    auto settings = getChainSettings(audioState);
-    updatePeakFilter(settings);
-    updateLowCutFilter(settings);
-    updateHighCutFilter(settings);
+    updateFilters();
 }
 
 void SimpleEQAudioProcessor::updateLowCutFilter(const ChainSetting& settings)
@@ -138,6 +135,15 @@ void SimpleEQAudioProcessor::updateHighCutFilter(const ChainSetting& settings)
 void SimpleEQAudioProcessor::updateCoefficients(Coefficients& old, const Coefficients& replacement)
 {
     *old = *replacement;
+}
+
+void SimpleEQAudioProcessor::updateFilters()
+{
+    // always update settings before running audio through
+    auto settings = getChainSettings(audioState);
+    updateLowCutFilter(settings);
+    updatePeakFilter(settings);
+    updateHighCutFilter(settings);
 }
 
 
@@ -188,11 +194,7 @@ void SimpleEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // always update settings before running audio through
-    auto settings = getChainSettings(audioState);
-    updatePeakFilter(settings);
-    updateLowCutFilter(settings);
-    updateHighCutFilter(settings);
+    updateFilters();
 
     juce::dsp::AudioBlock<float> block(buffer);
 
