@@ -11,7 +11,14 @@
 
 //==============================================================================
 SimpleEQAudioProcessorEditor::SimpleEQAudioProcessorEditor (SimpleEQAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+    : AudioProcessorEditor (&p), audioProcessor (p),
+    peakFreqAttachment(audioProcessor.audioState, "Peak Freq", peakFreqSlider),
+    peakGainAttachment(audioProcessor.audioState, "Peak Gain", peakGainSlider),
+    peakQattachment(audioProcessor.audioState, "Peak Q", peakQslider),
+    lowCutFreqAttachment(audioProcessor.audioState, "LowCut Freq", lowCutFreqSlider),
+    lowCutSlopeAttachment(audioProcessor.audioState, "LowCut Slope", lowCutSlopeSlider),
+    highCutFreqAttachment(audioProcessor.audioState, "HighCut Freq", highCutFreqSlider),
+    highCutSlopeAttachment(audioProcessor.audioState, "HighCut Slope", highCutSlopeSlider)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
